@@ -1,0 +1,62 @@
+services:
+  ldap:
+    image: osixia/openldap:1.5.0
+    container_name: ldap-server
+    environment:
+      LDAP_ORGANISATION: "EXAMPLE S.A."
+      LDAP_DOMAIN: "example.org"
+      LDAP_ADMIN_PASSWORD: "admin"
+    ports:
+      - "389:389"
+      - "636:636"
+    volumes:
+      - ./data/slapd/database:/var/lib/ldap
+      - ./data/slapd/config:/etc/ldap/slapd.d
+
+  mariadb:
+    image: mariadb:latest
+    container_name: owncloud-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: owncloud
+      MYSQL_USER: owncloud
+      MYSQL_PASSWORD: owncloudpassword
+    volumes:
+      - ./data/db:/var/lib/mysql
+
+  redis:
+    image: redis:latest
+    container_name: owncloud-redis
+    restart: always
+    command: redis-server --appendonly yes
+    volumes:
+      - ./data/redis:/data
+
+  owncloud:
+    image: owncloud/server:latest
+    container_name: owncloud
+    restart: always
+    environment:
+      - OWNCLOUD_ADMIN_USERNAME=admin
+      - OWNCLOUD_ADMIN_PASSWORD=admin
+      - OWNCLOUD_DB_TYPE=mysql
+      - OWNCLOUD_DB_HOST=mariadb
+      - OWNCLOUD_DB_NAME=owncloud
+      - OWNCLOUD_DB_USERNAME=owncloud
+      - OWNCLOUD_DB_PASSWORD=owncloudpassword
+      - OWNCLOUD_LDAP_ENABLED=true
+      - OWNCLOUD_LDAP_HOST=ldap
+      - OWNCLOUD_LDAP_PORT=389
+      - OWNCLOUD_LDAP_USER_DN=cn=admin,dc=example,dc=org
+      - OWNCLOUD_LDAP_USER_PASSWORD=admin
+      - OWNCLOUD_REDIS_ENABLED=true
+      - OWNCLOUD_REDIS_HOST=redis
+    ports:
+      - "8080:8080"
+    depends_on:
+      - ldap
+      - mariadb
+      - redis
+    volumes:
+      - ./data/owncloud/data:/mnt/data
