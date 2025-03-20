@@ -1,0 +1,13 @@
+dn: uid=carlota,dc=example,dc=org
+cn: carlotadlavega
+uid: carlota
+sn: 3
+objectClass: top
+objectClass: posixAccount
+objectClass: inetOrgPerson
+uidNumber: 501
+gidNumber: 20
+homeDirectory: /home/carlota
+loginShell: /bin/bash
+gecos: carlota
+userPassword: {crypt}xa

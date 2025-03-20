@@ -1,0 +1,126 @@
+services:
+  haproxy:
+    image: haproxy:latest
+    container_name: haproxy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    depends_on:
+      - owncloud1
+      - owncloud2
+    networks:
+      - internal
+
+  owncloud1:
+    image: owncloud/server:latest
+    container_name: owncloud1
+    depends_on:
+      - mariadb
+      - redis
+    environment:
+      - OWNCLOUD_DB_TYPE=mysql
+      - OWNCLOUD_DB_NAME=owncloud
+      - OWNCLOUD_DB_USERNAME=owncloud
+      - OWNCLOUD_DB_PASSWORD=secret
+      - OWNCLOUD_DB_HOST=mariadb
+      - OWNCLOUD_REDIS_HOST=redis
+      - OWNCLOUD_ADMIN_USERNAME=admin
+      - OWNCLOUD_ADMIN_PASSWORD=admin
+    volumes:
+      - owncloud-data:/mnt/data
+    ports:
+      - "8080:8080"
+    networks:
+      - internal
+
+  owncloud2:
+    image: owncloud/server:latest
+    container_name: owncloud2
+    depends_on:
+      - mariadb
+      - redis
+    environment:
+      - OWNCLOUD_DB_TYPE=mysql
+      - OWNCLOUD_DB_NAME=owncloud
+      - OWNCLOUD_DB_USERNAME=owncloud
+      - OWNCLOUD_DB_PASSWORD=secret
+      - OWNCLOUD_DB_HOST=mariadb
+      - OWNCLOUD_REDIS_HOST=redis
+      - OWNCLOUD_ADMIN_USERNAME=admin
+      - OWNCLOUD_ADMIN_PASSWORD=admin
+    volumes:
+      - owncloud-data:/mnt/data
+    ports:
+      - "8081:8080"
+    networks:
+      - internal
+
+  mariadb:
+    image: mariadb:latest
+    container_name: mariadb
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=owncloud
+      - MYSQL_USER=owncloud
+      - MYSQL_PASSWORD=secret
+    volumes:
+      - mariadb-data:/var/lib/mysql
+    networks:
+      - internal
+    ports:
+      - "3306:3306"
+    command: ["--default-authentication-plugin=mysql_native_password"]
+
+  mariadb_replica:
+    image: mariadb:latest
+    container_name: mariadb_replica
+    environment:
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - MYSQL_DATABASE=owncloud
+      - MYSQL_USER=owncloud
+      - MYSQL_PASSWORD=secret
+      - MYSQL_REPLICATION_USER=repl
+      - MYSQL_REPLICATION_PASSWORD=replpassword
+    volumes:
+      - mariadb-replica-data:/var/lib/mysql
+    networks:
+      - internal
+    ports:
+      - "3307:3306"
+    command: ["--default-authentication-plugin=mysql_native_password"]
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    networks:
+      - internal
+    ports:
+      - "6379:6379"
+
+  ldap:
+    image: osixia/openldap:1.5.0
+    container_name: ldap
+    environment:
+      LDAP_ORGANISATION: "EXAMPLE S.A."
+      LDAP_DOMAIN: "example.org"
+      LDAP_ADMIN_PASSWORD: "admin"
+    ports:
+      - "389:389"
+      - "636:636"
+    volumes:
+      - ./data/slapd/database:/var/lib/ldap
+      - ./data/slapd/config:/etc/ldap/slapd.d
+
+
+networks:
+  internal:
+    driver: bridge
+
+volumes:
+  owncloud-data:
+  mariadb-data:
+  mariadb-replica-data:
+  ldap-data:
+  ldap-config:
