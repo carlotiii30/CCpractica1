@@ -64,13 +64,13 @@ Usuario: carlota
 Contraseña: carlota
 ```
 
-### ✅ 5. Conclusiones
+## ✅ 5. Conclusiones
 - Implementación de OwnCloud con autenticación LDAP.
 - Configuración de MariaDB y Redis para optimizar el rendimiento.
 - Establecimiento de un sistema de backups automatizados.
 - Configuración almacenamiento persistente.
 
-### 📚 7. Referencias
+## 📚 6. Referencias
 - (OwnCloud Documentation)[https://doc.owncloud.com]
 - (OpenLDAP Docker)[https://github.com/osixia/docker-openldap]
 - (MariaDB Docker)[https://hub.docker.com/_/mariadb]
