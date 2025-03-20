@@ -11,6 +11,18 @@ Este documento detalla la implementación de **OwnCloud con autenticación LDAP*
 ---
 
 # 🏢 Escenario 1: Pequeña Empresa con OwnCloud y Autenticación LDAP
+## 🎯 1. Descripción y Objetivos
+
+Este escenario simula la implementación de un sistema de almacenamiento en la nube con autenticación centralizada mediante LDAP para una pequeña empresa o departamento.
+
+El objetivo de este escenario es:
+- Desplegar un sistema de almacenamiento en la nube seguro y accesible.
+- Garantizar que los usuarios puedan autenticarse utilizando LDAP.
+- Implementar una solución escalable con MariaDB y Redis para mejorar el rendimiento.
+- Configurar un sistema de backups automatizados para garantizar la seguridad de los datos.
+- Asegurar un almacenamiento de 100GB a 10TB según las necesidades de la empresa.
+
+---
 
 ## 🖥 2. Entorno de Desarrollo y Producción
 El sistema ha sido desarrollado y probado en:
