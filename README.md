@@ -58,6 +58,10 @@ Para acceder a OwnCloud en el navegador:
 http://localhost:8080
 ```
 
+👤 Credenciales del usuario en OwnCloud
+Usuario: carlota
+Contraseña: carlota
+
 ### ✅ 5. Conclusiones
 - Implementación de OwnCloud con autenticación LDAP.
 - Configuración de MariaDB y Redis para optimizar el rendimiento.
