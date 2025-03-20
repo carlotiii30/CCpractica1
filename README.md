@@ -187,3 +187,24 @@ Para garantizar la continuidad del servicio, se realizaron las siguientes prueba
 - [HAProxy Configuration](https://www.haproxy.com/documentation)
 - [MariaDB Replication](https://mariadb.com/kb/en/replication/)
 - [OpenLDAP Docker](https://github.com/osixia/docker-openldap)
+
+## ⚙️ 6. Implementación con Kubernetes
+
+### 📜 Despliegue con Kubernetes
+Para desplegar los servicios en Kubernetes:
+```sh
+kubectl apply -f k8s/mariadb-deployment.yaml
+kubectl apply -f k8s/redis-deployment.yaml
+kubectl apply -f k8s/ldap-deployment.yaml
+kubectl apply -f k8s/owncloud-deployment.yaml
+```
+
+Para verificar los pods:
+```sh
+kubectl get pods
+```
+
+Para acceder a OwnCloud en un clúster local (Minikube):
+```sh
+minikube service owncloud-service --url
+```
