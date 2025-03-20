@@ -76,11 +76,15 @@ Usuario: carlota
 Contraseña: carlota
 ```
 
+---
+
 ## ✅ 5. Conclusiones
 - Implementación de OwnCloud con autenticación LDAP.
 - Configuración de MariaDB y Redis para optimizar el rendimiento.
 - Establecimiento de un sistema de backups automatizados.
 - Configuración almacenamiento persistente.
+
+---
 
 ## 📚 6. Referencias
 - (OwnCloud Documentation)[https://doc.owncloud.com]
@@ -175,6 +179,8 @@ Para garantizar la continuidad del servicio, se realizaron las siguientes prueba
 - Configuración de **MariaDB con replicación** para garantizar disponibilidad.
 - Uso de **Redis** para mejorar rendimiento en caché.
 - Pruebas de **tolerancia a fallos exitosas**, garantizando continuidad del servicio.
+
+---
 
 ## 📚 5. Referencias
 - [OwnCloud Documentation](https://doc.owncloud.com)
