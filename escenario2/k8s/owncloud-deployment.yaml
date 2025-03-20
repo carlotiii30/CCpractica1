@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: owncloud
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: owncloud
+  template:
+    metadata:
+      labels:
+        app: owncloud
+    spec:
+      containers:
+      - name: owncloud
+        image: owncloud/server:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: OWNCLOUD_DB_TYPE
+          value: "mysql"
+        - name: OWNCLOUD_DB_NAME
+          value: "owncloud"
+        - name: OWNCLOUD_DB_USERNAME
+          value: "owncloud"
+        - name: OWNCLOUD_DB_PASSWORD
+          value: "secret"
+        - name: OWNCLOUD_DB_HOST
+          value: "mariadb"
+        - name: OWNCLOUD_REDIS_HOST
+          value: "redis"
+        - name: OWNCLOUD_ADMIN_USERNAME
+          value: "admin"
+        - name: OWNCLOUD_ADMIN_PASSWORD
+          value: "admin"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: owncloud-service
+spec:
+  selector:
+    app: owncloud
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: LoadBalancer
