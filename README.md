@@ -77,4 +77,95 @@ Contraseña: carlota
 - (Redis Docker)[https://hub.docker.com/_/redis]
 
 
-# 🏢 Escenario 2: Pequeña Empresa con OwnCloud y Autenticación LDAP
+---
+
+# 🏢 Escenario 2: Empresa Mediana con OwnCloud y Alta Disponibilidad
+
+## 🎯 1. Descripción y Objetivos
+El objetivo de este escenario es implementar un sistema de almacenamiento en la nube para una empresa de tamaño mediano, con un enfoque en **alta disponibilidad, redundancia y escalabilidad**.
+
+### ✅ Requisitos
+- Soportar entre **150 y 1,000 usuarios**.
+- Implementar **OwnCloud** con múltiples servidores de aplicación.
+- Implementar **MariaDB con replicación** para garantizar la disponibilidad de la base de datos.
+- Autenticación centralizada con **LDAP**.
+- Implementar **balanceo de carga con HAProxy**.
+- Uso de **Redis** para optimización de caché.
+- Garantizar **almacenamiento de hasta 200TB**.
+- Implementar **tolerancia a fallos** y garantizar continuidad del servicio sin interrupciones.
+
+---
+
+## ⚙️ 2. Infraestructura y Configuración
+Este escenario implementa un sistema más robusto con los siguientes servicios desplegados en **Docker Compose**:
+
+| Servicio           | Descripción                                      |
+|--------------------|--------------------------------------------------|
+| HAProxy           | Balanceador de carga para distribuir tráfico entre los servidores de OwnCloud |
+| OwnCloud (x2)     | Dos instancias de OwnCloud para redundancia y alta disponibilidad |
+| MariaDB (Maestro) | Base de datos principal de OwnCloud              |
+| MariaDB (Esclavo) | Réplica de la base de datos para failover         |
+| Redis             | Caché para mejorar el rendimiento                 |
+| OpenLDAP          | Autenticación centralizada de usuarios            |
+
+### 📜 Despliegue con Docker Compose
+Para iniciar los servicios:
+```sh
+docker-compose up -d
+```
+
+Para verificar que están corriendo:
+```sh
+docker ps
+```
+
+Para acceder a OwnCloud a través de HAProxy:
+```sh
+http://localhost
+```
+
+Para acceder a las estadísticas de HAProxy:
+```sh
+http://localhost:5404/stats
+```
+👤 Credenciales de acceso:
+```
+Usuario: admin
+Contraseña: adminpassword
+```
+
+---
+
+## 🔄 3. Pruebas de Tolerancia a Fallos
+Para garantizar la continuidad del servicio, se realizaron las siguientes pruebas:
+
+### 📌 Prueba 1: Balanceo de Carga
+1. Acceder a OwnCloud desde `http://localhost`.
+2. Revisar que el tráfico se distribuye entre `owncloud1` y `owncloud2`.
+3. Comprobar las estadísticas en `http://localhost:443/stats`.
+
+### 📌 Prueba 2: Fallo de un Servidor OwnCloud
+1. Apagar `owncloud1`:
+   ```sh
+   docker stop owncloud1
+   ```
+2. Verificar que `http://localhost` sigue funcionando con `owncloud2`.
+3. Reiniciar `owncloud1`:
+   ```sh
+   docker start owncloud1
+   ```
+
+---
+
+## ✅ 4. Conclusiones
+- Implementación de **OwnCloud escalable y redundante**.
+- Uso de **HAProxy** para distribuir tráfico entre servidores.
+- Configuración de **MariaDB con replicación** para garantizar disponibilidad.
+- Uso de **Redis** para mejorar rendimiento en caché.
+- Pruebas de **tolerancia a fallos exitosas**, garantizando continuidad del servicio.
+
+## 📚 5. Referencias
+- [OwnCloud Documentation](https://doc.owncloud.com)
+- [HAProxy Configuration](https://www.haproxy.com/documentation)
+- [MariaDB Replication](https://mariadb.com/kb/en/replication/)
+- [OpenLDAP Docker](https://github.com/osixia/docker-openldap)
